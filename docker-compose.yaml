@@ -1,0 +1,11 @@
+database:
+  image: mysql
+  container_name: dac-database
+  command: mysqld --user=root --verbose
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_DATABASE: "hospital"
+    MYSQL_USER: "admin"
+    MYSQL_PASSWORD: "admin"
+    MYSQL_ROOT_PASSWORD: "admin"
