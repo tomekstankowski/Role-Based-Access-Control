@@ -1,4 +1,4 @@
-package com.stankowski_strzelka.dac;
+package com.stankowski_strzelka.rbac;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

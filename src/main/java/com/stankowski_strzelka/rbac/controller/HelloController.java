@@ -1,4 +1,4 @@
-package com.stankowski_strzelka.dac.controller;
+package com.stankowski_strzelka.rbac.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

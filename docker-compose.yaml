@@ -1,6 +1,6 @@
 database:
   image: mysql
-  container_name: dac-database
+  container_name: rbac-database
   command: mysqld --user=root --verbose
   ports:
     - "3306:3306"

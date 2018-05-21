@@ -1,4 +1,4 @@
-package com.stankowski_strzelka.dac.web_security;
+package com.stankowski_strzelka.rbac.web_security;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
