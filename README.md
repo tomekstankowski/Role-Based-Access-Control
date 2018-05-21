@@ -1,1 +1,1 @@
-Sample application presenting **Discretionary Access Control**
+Sample application presenting **Role Based Access Control**
