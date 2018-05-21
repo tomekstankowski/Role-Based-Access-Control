@@ -1,7 +1,15 @@
 spring:
-  jpa.hibernate.ddl-auto: update
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql : true
   jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: false
   datasource:
-    url: jdbc:mysql://localhost:3306/hospital
-    username: admin
-    password: admin
+    url: jdbc:mysql://sstrzelk.ayz.pl:3306/sstrzelk_hospital
+    username: sstrzelk_dac
+    password: a!S8%gW^d1Au$1^y
+logging:
+  level:
+    root: WARN
+    com.memorynotfound: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
