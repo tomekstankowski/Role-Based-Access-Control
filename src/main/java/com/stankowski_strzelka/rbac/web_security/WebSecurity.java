@@ -1,4 +1,4 @@
-package com.stankowski_strzelka.dac.web_security;
+package com.stankowski_strzelka.rbac.web_security;
 
 import com.stankowski_strzelka.dac.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
