@@ -23,4 +23,14 @@ public class MainController {
     public String userIndex() {
         return "user/index";
     }
+
+    @GetMapping("/user/duties")
+    public String userDuties(){
+        return "user/duties";
+    }
+
+    @GetMapping("user/appointments")
+    public String userApp(){
+        return "user/appointments";
+    }
 }

@@ -1,6 +1,7 @@
 package com.stankowski_strzelka.dac.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -8,6 +9,7 @@ import java.util.Collection;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Data
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -27,9 +29,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
-
-    public User() {
-    }
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;

@@ -3,9 +3,10 @@ package com.stankowski_strzelka.dac.dto;
 import com.stankowski_strzelka.dac.validator.FieldMatch;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 @FieldMatch.List({
         @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match"),

@@ -9,3 +9,12 @@ color: #a94442;
 .error-message:first-letter {
 text-transform: capitalize;
 }
+body {
+    margin-left: 32px;
+}
+
+th, td {
+    text-align: center;
+    padding: 16px;
+    font-size: 20px;
+}
