@@ -1,6 +1,6 @@
 package com.stankowski_strzelka.rbac.web_security;
 
-import com.stankowski_strzelka.dac.service.UserService;
+import com.stankowski_strzelka.rbac.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
