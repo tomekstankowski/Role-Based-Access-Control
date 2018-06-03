@@ -2,8 +2,6 @@ package com.stankowski_strzelka.rbac.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Collection;

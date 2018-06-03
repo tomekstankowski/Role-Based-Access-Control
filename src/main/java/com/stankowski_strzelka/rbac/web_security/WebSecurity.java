@@ -23,6 +23,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("/user/duties").hasAuthority("WRITE_PRIVILEGE")
                 .antMatchers(
                         "/registration",
                         "/js/**",

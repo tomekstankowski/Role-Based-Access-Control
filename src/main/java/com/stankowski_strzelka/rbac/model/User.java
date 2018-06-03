@@ -2,7 +2,6 @@ package com.stankowski_strzelka.rbac.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -31,14 +30,9 @@ public class User {
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password, Collection<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
-
-    public User(String email, String password, Collection<Role> roles) {
         this.email = email;
         this.password = password;
         this.roles = roles;

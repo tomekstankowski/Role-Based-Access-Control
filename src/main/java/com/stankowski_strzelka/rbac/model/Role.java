@@ -1,9 +1,8 @@
 package com.stankowski_strzelka.rbac.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -28,6 +27,7 @@ public class Role {
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "id"))
+    @Setter
     private Collection<Privilege> privileges;
 
     public Role(String name){
