@@ -13,3 +13,18 @@ logging:
     com.memorynotfound: DEBUG
     org.springframework.web: INFO
     org.springframework.security: INFO
+server:
+  port: 8443
+# The format used for the keystore
+  ssl:
+    key-store-type: PKCS12
+# The path to the keystore containing the certificate
+    key-store: classpath:keystore.p12
+# The password used to generate the certificate
+    key-store-password: bsk1234
+# The alias mapped to the certificate
+    key-alias: tomcat
+    enabled: ${SSL_ENABLED:true}
+
+
+
