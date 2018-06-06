@@ -57,11 +57,11 @@ public class InitialDataLoader implements
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         Role userRole = roleRepository.findByName("ROLE_USER");
-        User user1 = new User("Test", "Test", "test@test.com", "test",
-                Collections.singletonList(adminRole));
+        User user1 = new User("Test", "Test", "test@test.com",
+                passwordEncoder.encode("test"), Collections.singletonList(adminRole));
+        User user2 = new User("Jan", "Kowalski", "3@pl",
+                passwordEncoder.encode("3"), Collections.singletonList(userRole));
         createUserIfNotFound(user1);
-        User user2 = new User("Jan", "Kowalski", "3@pl", "3",
-                Collections.singletonList(userRole));
         createUserIfNotFound(user2);
 
         User medical = userRepository.findByEmail("test@test.com");
@@ -78,7 +78,7 @@ public class InitialDataLoader implements
     }
 
     @Transactional
-    private Privilege createPrivilegeIfNotFound(String name) {
+    Privilege createPrivilegeIfNotFound(String name) {
 
         Privilege privilege = privilegeRepository.findByName(name);
         if (privilege == null) {
@@ -89,7 +89,7 @@ public class InitialDataLoader implements
     }
 
     @Transactional
-    private Role createRoleIfNotFound(
+    Role createRoleIfNotFound(
             String name, Collection<Privilege> privileges) {
 
         Role role = roleRepository.findByName(name);
@@ -102,7 +102,7 @@ public class InitialDataLoader implements
     }
 
     @Transactional
-    private Duty createDutyIfNotFound(User medical, LocalDateTime start, LocalDateTime end){
+    Duty createDutyIfNotFound(User medical, LocalDateTime start, LocalDateTime end){
         Duty duty = dutyRepository.findByMedicalAndStartDateAndEndDate(medical, start, end);
         if (duty == null){
             duty = new Duty(medical, start, end);
@@ -112,7 +112,7 @@ public class InitialDataLoader implements
     }
 
     @Transactional
-    private User createUserIfNotFound(User user) {
+    User createUserIfNotFound(User user) {
         if (userRepository.findByEmail(user.getEmail()) == null) {
             userRepository.save(user);
         }
@@ -120,7 +120,7 @@ public class InitialDataLoader implements
     }
 
     @Transactional
-    private Appointment createAppointmentIfNotFound(User medical, User patient, LocalDateTime start, LocalDateTime end){
+    Appointment createAppointmentIfNotFound(User medical, User patient, LocalDateTime start, LocalDateTime end){
         Appointment appointment = appointmentRepository.findByMedicalAndPatientAndStartDateAndEndDate(
                 medical, patient, start, end
         );
