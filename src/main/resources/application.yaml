@@ -1,6 +1,6 @@
 spring:
   jpa:
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create
     show-sql : true
   jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: false
   datasource:

@@ -69,8 +69,8 @@ public class InitialDataLoader implements
         LocalDateTime start = LocalDateTime.of(2018, 6, 3, 12, 0);
         LocalDateTime end = LocalDateTime.of(2018, 6, 3, 15, 0);
 
-        createDutyIfNotFound(medical, start, end);
-        createDutyIfNotFound(medical, start.plusDays(1), end.plusDays(1));
+        createDutyIfNotFound(medical, start, end, 1);
+        createDutyIfNotFound(medical, start.plusDays(1), end.plusDays(1), 2);
 
         createAppointmentIfNotFound(medical, patient, start, start.plusMinutes(30));
 
@@ -102,10 +102,10 @@ public class InitialDataLoader implements
     }
 
     @Transactional
-    Duty createDutyIfNotFound(User medical, LocalDateTime start, LocalDateTime end){
+    Duty createDutyIfNotFound(User medical, LocalDateTime start, LocalDateTime end, int office) {
         Duty duty = dutyRepository.findByMedicalAndStartDateAndEndDate(medical, start, end);
         if (duty == null){
-            duty = new Duty(medical, start, end);
+            duty = new Duty(medical, start, end, office);
             dutyRepository.save(duty);
         }
         return duty;

@@ -11,29 +11,30 @@
     <title>Registration</title>
 </head>
 <body>
-<h1>Moje dużury</h1>
-<br>
-<h2>PONIEDZIAŁEK</h2>
-<span>Od</span>
-<input type="time" value="08:30"/>
-<span>Do</span>
-<input type="time" value="17:30"/>
-<button>Zapisz</button>
-<button>Usuń</button>
-<h2>WTOREK</h2>
-<span>Od</span>
-<input type="time" value="09:30"/>
-<span>Do</span>
-<input type="time" value="16:00"/>
-<button>Zapisz</button>
-<button>Usuń</button>
-<h2>ŚRODA</h2>
-<button>Dodaj</button>
-<h2>CZWARTEK</h2>
-<button>Dodaj</button>
-<h2>PIĄTEK</h2>
-<button>Dodaj</button>
-<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<div class="container">
+
+    <h1>Moje dyżury</h1>
+
+    <table>
+        <tr>
+            <th>Data</th>
+            <th>Godzina rozpoczęcia</th>
+            <th>Godzina zakończenia</th>
+            <th>Gabinet</th>
+        </tr>
+        <tr th:each="duty : ${duties}">
+            <td th:text="${#temporals.format(duty.startDate, 'dd-MM-yyyy')}"></td>
+            <td th:text="${#temporals.format(duty.startDate, 'HH:mm')}"></td>
+            <td th:text="${#temporals.format(duty.endDate, 'HH:mm')}"></td>
+            <td th:text="${duty.office}"></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(duties)}">
+            <td colspan="4">Pusto</td>
+        </tr>
+    </table>
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+</div>
 </body>
 </html>
