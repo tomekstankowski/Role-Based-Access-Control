@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+
+    <title>Administrator panel</title>
+</head>
+<body>
+<div class="container">
+
+    <h1>Users</h1>
+
+    <table>
+        <tr>
+            <th>E-mail</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Create date</th>
+            <th></th>
+        </tr>
+        <tr th:each="user : ${users}">
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:text="${#temporals.format(user.createDate, 'dd-MM-yyyy')}"></td>
+                <td>
+                    <a th:href="@{/user/{id}/account(id=${user.id})}" class="btn btn-default">Edit</a>
+                </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <td colspan="5">Empty</td>
+        </tr>
+    </table>
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+</div>
+
+</body>
+</html>

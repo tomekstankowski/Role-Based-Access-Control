@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Entity
@@ -32,6 +33,12 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+    private LocalDateTime createDate;
+
+    @PrePersist
+    public void setUpCreateDate() {
+        createDate = LocalDateTime.now();
+    }
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
