@@ -40,7 +40,7 @@ public class DutyController {
 
     @GetMapping
     @PreAuthorize(("hasAuthority('READ_DUTIES')"))
-    public String userDuties() {
+    public String getDutiesView() {
         return "user/duties";
     }
 
@@ -56,7 +56,7 @@ public class DutyController {
         try {
             dutyService.createDuty(duty, medical);
         } catch (ConflictException ex) {
-            bindingResult.reject("dd", ex.getMessage());
+            bindingResult.reject("conflict", ex.getMessage());
             return "/user/duties";
         }
         return "redirect:/user/duties?added";
