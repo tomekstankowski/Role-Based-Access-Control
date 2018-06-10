@@ -1,10 +1,11 @@
 package com.stankowski_strzelka.rbac.web_security;
 
 import com.stankowski_strzelka.rbac.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,16 +15,18 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableWebSecurity
 @EnableTransactionManagement
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final LoginSuccessHandler loginSuccessHandler;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/user/duties").hasAuthority("WRITE_PRIVILEGE")
                 .antMatchers(
                         "/registration",
                         "/js/**",
@@ -35,6 +38,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
+                .successHandler(loginSuccessHandler)
                 .and()
                 .logout()
                 .invalidateHttpSession(true)

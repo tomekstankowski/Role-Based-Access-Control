@@ -2,9 +2,9 @@ package com.stankowski_strzelka.rbac.development;
 
 import com.stankowski_strzelka.rbac.model.*;
 import com.stankowski_strzelka.rbac.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -16,51 +16,37 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
+@Transactional
+@RequiredArgsConstructor
 public class InitialDataLoader implements
-        ApplicationListener<ContextRefreshedEvent> {
+        ApplicationListener<ApplicationReadyEvent> {
 
-    boolean alreadySetup = false;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PrivilegeRepository privilegeRepository;
-
-    @Autowired
-    private DutyRepository dutyRepository;
-
-    @Autowired
-    private AppointmentRepository appointmentRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PrivilegeRepository privilegeRepository;
+    private final DutyRepository dutyRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(final ApplicationReadyEvent event) {
 
-        if (alreadySetup)
-            return;
-        Privilege readPrivilege
-                = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege
-                = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+        Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
+        Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+        Privilege createDuties = createPrivilegeIfNotFound("CREATE_DUTIES");
+        Privilege readDuties = createPrivilegeIfNotFound("READ_DUTIES");
+        Privilege deleteDuties = createPrivilegeIfNotFound("DELETE_DUTIES");
 
         List<Privilege> adminPrivileges = Arrays.asList(
                 readPrivilege, writePrivilege);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
+        Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        Role userRole = createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
+        Role medicalRole = createRoleIfNotFound("ROLE_MEDICAL", Arrays.asList(createDuties, readDuties, deleteDuties));
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        Role userRole = roleRepository.findByName("ROLE_USER");
         User user1 = new User("Test", "Test", "test@test.com",
-                passwordEncoder.encode("test"), Collections.singletonList(adminRole));
+                passwordEncoder.encode("test"), Collections.singletonList(userRole));
         User user2 = new User("Jan", "Kowalski", "3@pl",
-                passwordEncoder.encode("3"), Collections.singletonList(userRole));
+                passwordEncoder.encode("3"), Arrays.asList(userRole, medicalRole));
         createUserIfNotFound(user1);
         createUserIfNotFound(user2);
 
@@ -69,16 +55,13 @@ public class InitialDataLoader implements
         LocalDateTime start = LocalDateTime.of(2018, 6, 3, 12, 0);
         LocalDateTime end = LocalDateTime.of(2018, 6, 3, 15, 0);
 
-        createDutyIfNotFound(medical, start, end);
-        createDutyIfNotFound(medical, start.plusDays(1), end.plusDays(1));
+        createDutyIfNotFound(medical, start, end, 1);
+        createDutyIfNotFound(medical, start.plusDays(1), end.plusDays(1), 2);
 
         createAppointmentIfNotFound(medical, patient, start, start.plusMinutes(30));
-
-        alreadySetup = true;
     }
 
-    @Transactional
-    Privilege createPrivilegeIfNotFound(String name) {
+    private Privilege createPrivilegeIfNotFound(String name) {
 
         Privilege privilege = privilegeRepository.findByName(name);
         if (privilege == null) {
@@ -88,8 +71,7 @@ public class InitialDataLoader implements
         return privilege;
     }
 
-    @Transactional
-    Role createRoleIfNotFound(
+    private Role createRoleIfNotFound(
             String name, Collection<Privilege> privileges) {
 
         Role role = roleRepository.findByName(name);
@@ -101,26 +83,23 @@ public class InitialDataLoader implements
         return role;
     }
 
-    @Transactional
-    Duty createDutyIfNotFound(User medical, LocalDateTime start, LocalDateTime end){
+    private Duty createDutyIfNotFound(User medical, LocalDateTime start, LocalDateTime end, int office) {
         Duty duty = dutyRepository.findByMedicalAndStartDateAndEndDate(medical, start, end);
         if (duty == null){
-            duty = new Duty(medical, start, end);
+            duty = new Duty(medical, start, end, office);
             dutyRepository.save(duty);
         }
         return duty;
     }
 
-    @Transactional
-    User createUserIfNotFound(User user) {
+    private User createUserIfNotFound(User user) {
         if (userRepository.findByEmail(user.getEmail()) == null) {
             userRepository.save(user);
         }
         return user;
     }
 
-    @Transactional
-    Appointment createAppointmentIfNotFound(User medical, User patient, LocalDateTime start, LocalDateTime end){
+    private Appointment createAppointmentIfNotFound(User medical, User patient, LocalDateTime start, LocalDateTime end) {
         Appointment appointment = appointmentRepository.findByMedicalAndPatientAndStartDateAndEndDate(
                 medical, patient, start, end
         );

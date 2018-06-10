@@ -15,10 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,6 +57,10 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
 
+    public Optional<User> findById(long id) {
+        return userRepository.findById(id);
+    }
+
     private Collection<? extends GrantedAuthority> getAuthorities(
             Collection<Role> roles) {
 
@@ -72,12 +73,16 @@ public class UserService implements IUserService {
         for (Role role : roles) {
             collection.addAll(role.getPrivileges());
         }
-        return collection.stream().map(Privilege::getName).collect(Collectors.toList());
+        return collection.stream()
+                .map(Privilege::getName)
+                .collect(Collectors.toList());
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
 
-        return privileges.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return privileges.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
 }
