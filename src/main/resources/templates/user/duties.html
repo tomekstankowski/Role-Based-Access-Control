@@ -6,35 +6,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap-datetimepicker/2.4.2/css/bootstrap-datetimepicker.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
 
-    <title>Registration</title>
+    <title>Duties</title>
 </head>
 <body>
 <div class="container">
 
-    <h1>Moje dyżury</h1>
+    <h1>My duties</h1>
 
     <table>
         <tr>
-            <th>Data</th>
-            <th>Godzina rozpoczęcia</th>
-            <th>Godzina zakończenia</th>
-            <th>Gabinet</th>
+            <th>Date</th>
+            <th>Start time</th>
+            <th>End time</th>
+            <th>Office</th>
+            <th></th>
         </tr>
         <tr th:each="duty : ${duties}">
-            <td th:text="${#temporals.format(duty.startDate, 'dd-MM-yyyy')}"></td>
-            <td th:text="${#temporals.format(duty.startDate, 'HH:mm')}"></td>
-            <td th:text="${#temporals.format(duty.endDate, 'HH:mm')}"></td>
-            <td th:text="${duty.office}"></td>
+            <form th:action="@{/user/duties/{id}/delete(id=${duty.id})}" method="post">
+                <td th:text="${#temporals.format(duty.startDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#temporals.format(duty.startDate, 'HH:mm')}"></td>
+                <td th:text="${#temporals.format(duty.endDate, 'HH:mm')}"></td>
+                <td th:text="${duty.office}"></td>
+                <td>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </td>
+            </form>
         </tr>
         <tr th:if="${#lists.isEmpty(duties)}">
-            <td colspan="4">Pusto</td>
+            <td colspan="4">Empty</td>
         </tr>
     </table>
 
+    <div th:if="${param.deleted}">
+        <div class="alert alert-info">Deleted duty</div>
+    </div>
+
+    <h1>Add duty</h1>
+
+    <form th:action="@{/user/duties}" th:object="${duty}" method="post">
+
+        <p class="error-message"
+           th:if="${#fields.hasGlobalErrors()}"
+           th:each="error : ${#fields.errors('global')}"
+           th:text="${error}">Validation error</p>
+
+        <div class="form-group"
+             th:classappend="${#fields.hasErrors('startDate')}? 'has-error':''">
+            <label for="startDate" class="control-label">Duty start</label>
+            <div class='input-group date' id='startDate'>
+                <input type='text' class="form-control" th:field="*{startDate}"/>
+                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+            </div>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('startDate')}"
+               th:text="${error}">Validation error</p>
+        </div>
+
+        <div class="form-group"
+             th:classappend="${#fields.hasErrors('endDate')}? 'has-error':''">
+            <label for="endDate" class="control-label">Duty end</label>
+            <div class='input-group date' id='endDate'>
+                <input type='text' class="form-control" th:field="*{endDate}"/>
+                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+            </div>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('endDate')}"
+               th:text="${error}">Validation error</p>
+        </div>
+
+        <div class="form-group"
+             th:classappend="${#fields.hasErrors('office')}? 'has-error':''">
+            <label for="office" class="control-label">Office</label>
+            <div class='input-group' id='office'>
+                <input type="number" min="1" max="200" class="form-control" th:field="*{office}"/>
+            </div>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('office')}"
+               th:text="${error}">Validation error</p>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Add</button>
+        </div>
+
+    </form>
+
+    <div th:if="${param.added}">
+        <div class="alert alert-info">Added duty</div>
+    </div>
+
     <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/transition.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/collapse.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/webjars/bootstrap-datetimepicker/2.4.2/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/momentjs/2.22.1/min/moment.min.js}"></script>
+
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        var now = moment();
+        $('#startDate').datetimepicker({
+            defaultDate: now
+        });
+        $('#startDate input').val(now.format('YYYY-MM-DD HH:mm'));
+        $('#endDate').datetimepicker({
+            defaultDate: now.add(8, 'h')
+        });
+        $('#endDate input').val(now.format('YYYY-MM-DD HH:mm'));
+        $('#office input').val(1);
+
+    });
+</script>
 </body>
 </html>

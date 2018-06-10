@@ -73,12 +73,16 @@ public class UserService implements IUserService {
         for (Role role : roles) {
             collection.addAll(role.getPrivileges());
         }
-        return collection.stream().map(Privilege::getName).collect(Collectors.toList());
+        return collection.stream()
+                .map(Privilege::getName)
+                .collect(Collectors.toList());
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
 
-        return privileges.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return privileges.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
 }
