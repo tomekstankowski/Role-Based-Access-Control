@@ -68,6 +68,12 @@ public class AppointmentService {
                 .collect(toList());
     }
 
+    public Appointment deleteAppointment(long id) {
+        Appointment appointment = appointmentRepository.findById(id).get();
+        appointmentRepository.delete(appointment);
+        return appointment;
+    }
+
     private List<Appointment> getAppointmentsFromDuty(Duty duty) {
         List<Appointment> appointments = new ArrayList<>();
         for (int i = 0; i < getNumberOfPossibleAppointments(duty.getStartDate(), duty.getEndDate()); i++) {
@@ -85,4 +91,6 @@ public class AppointmentService {
     private int getNumberOfPossibleAppointments(LocalDateTime start, LocalDateTime end) {
         return (int) (start.until(end, ChronoUnit.MINUTES) / 30);
     }
+
+
 }

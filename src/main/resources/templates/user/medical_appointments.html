@@ -12,7 +12,7 @@
 <body>
 
 <div th:if="${not #lists.isEmpty(appointments)}">
-    <h2>My appointments</h2>
+    <h2>My medical appointments</h2>
     <div th:if="${param.deleted}">
         <div class="alert alert-info">Appointment has been deleted</div>
     </div>
@@ -41,31 +41,7 @@
 
 </div>
 <br>
-<div th:if="${not #lists.isEmpty(availableAppointments)}">
-    <h2>Book an appointment</h2>
-    <table class="table table-striped">
-        <tr>
-            <th>Medical</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th></th>
-        </tr>
-        <tr th:each="a : ${availableAppointments}">
-            <td th:text="${a.medical.getFirstName() + ' ' + a.medical.getLastName()}"></td>
-            <td th:text="${a.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_DATE)}"></td>
-            <td th:text="${a.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME) + ' - ' +
-            a.getEndDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME)}"></td>
-            <td>
-                <form action="#" th:action="@{/appointments/add}" method="post" th:object="${addAppointment}">
-                    <input type="hidden" th:value="${a.medical.id}" name="medicalId">
-                    <input type="hidden" th:value="${a.startDate}" name="startDate">
-                    <input type="hidden" th:value="${a.endDate}" name="endDate">
-                    <button type="submit" name="action">Book!</button>
-                </form>
-            </td>
-        </tr>
-    </table>
-</div>
+
 <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
 </body>

@@ -7,13 +7,12 @@ import com.stankowski_strzelka.rbac.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@RequestMapping("appointments")
 public class AppointmentController {
 
     @Autowired
@@ -24,12 +23,12 @@ public class AppointmentController {
 
 
     @ModelAttribute("addAppointment")
-    public AppointmentDto appointmentModel(){
+    public AppointmentDto appointmentModel() {
         return new AppointmentDto();
     }
 
-    @GetMapping("user/appointments")
-    public String userApp(Model model){
+    @GetMapping("/list")
+    public String userApp(Model model) {
         List<Appointment> appointments = appointmentService.getAllPatientAppointments(
                 userService.getCurrentUser()
         );
@@ -41,9 +40,15 @@ public class AppointmentController {
         return "user/appointments";
     }
 
-    @PostMapping("appointment/add")
+    @PostMapping("/add")
     public String addAppointment(@ModelAttribute("addAppointment") AppointmentDto appointment) throws Exception {
         appointmentService.saveAppointment(appointment);
-        return "redirect:/user/appointments?added";
+        return "redirect:/appointments/list?added";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteDuty(@PathVariable long id) {
+        appointmentService.deleteAppointment(id);
+        return "redirect:/appointments/list?deleted";
     }
 }
