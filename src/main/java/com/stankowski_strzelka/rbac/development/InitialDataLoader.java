@@ -30,8 +30,6 @@ public class InitialDataLoader implements
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
 
-        Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
         Privilege createDuties = createPrivilegeIfNotFound("CREATE_DUTIES");
         Privilege readDuties = createPrivilegeIfNotFound("READ_DUTIES");
         Privilege deleteDuties = createPrivilegeIfNotFound("DELETE_DUTIES");
@@ -40,15 +38,15 @@ public class InitialDataLoader implements
         Privilege deleteUsers = createPrivilegeIfNotFound("DELETE_USERS");
 
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN", Arrays.asList(readUsers, updateUsers, deleteUsers));
-        Role userRole = createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
+        Role userRole = createRoleIfNotFound("ROLE_PATIENT", Collections.emptyList());
         Role medicalRole = createRoleIfNotFound("ROLE_MEDICAL", Arrays.asList(createDuties, readDuties, deleteDuties));
 
         User admin = new User("Janusz", "Admiński", "janusz@admin.pl",
-                passwordEncoder.encode("admin"), Collections.singletonList(adminRole));
+                passwordEncoder.encode("admin"), Arrays.asList(adminRole, medicalRole));
         User medical = new User("Dr Jan", "Lekarz", "jan@lekarz.pl",
                 passwordEncoder.encode("lekarz"), Arrays.asList(userRole, medicalRole));
         User patient = new User("Zenon", "Pacjent", "zenon@pacjent.pl",
-                passwordEncoder.encode("pacjent"), Arrays.asList(userRole, userRole));
+                passwordEncoder.encode("pacjent"), Collections.singleton(userRole));
         createUserIfNotFound(admin);
         createUserIfNotFound(medical);
         createUserIfNotFound(patient);

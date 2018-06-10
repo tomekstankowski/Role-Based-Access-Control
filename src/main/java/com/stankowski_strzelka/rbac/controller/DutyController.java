@@ -49,13 +49,13 @@ public class DutyController {
     }
 
     @GetMapping
-    @PreAuthorize(("hasAuthority('READ_DUTIES') AND principal.username == #modelMap.get('email')"))
+    @PreAuthorize(("@securityService.hasPrivilege('READ_DUTIES') AND principal.username == #modelMap.get('email')"))
     public String getDutiesView(ModelMap modelMap) {
         return "user/duties";
     }
 
     @PostMapping
-    @PreAuthorize(("hasAuthority('CREATE_DUTIES') AND principal.username == #modelMap.get('email')"))
+    @PreAuthorize(("@securityService.hasPrivilege('CREATE_DUTIES') AND principal.username == #modelMap.get('email')"))
     public String createDuty(@PathVariable long id,
                              @Valid @ModelAttribute("duty") DutyCreationDto duty,
                              BindingResult bindingResult,
@@ -74,7 +74,7 @@ public class DutyController {
     }
 
     @PostMapping("/{dutyId}")
-    @PreAuthorize(("hasAuthority('DELETE_DUTIES') AND principal.username == #modelMap.get('email')"))
+    @PreAuthorize(("@securityService.hasPrivilege('DELETE_DUTIES') AND principal.username == #modelMap.get('email')"))
     public String deleteDuty(@PathVariable long id,
                              @PathVariable long dutyId,
                              @RequestParam String action,
