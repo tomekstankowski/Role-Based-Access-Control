@@ -1,5 +1,6 @@
 package com.stankowski_strzelka.rbac.controller;
 
+import com.stankowski_strzelka.rbac.exception.BadRequestException;
 import com.stankowski_strzelka.rbac.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -15,6 +16,13 @@ public class ErrorController {
     public String exception(final ResourceNotFoundException ex, final Model model) {
         model.addAttribute("message", ex.getMessage());
         return "error/404";
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String exception(final BadRequestException ex, final Model model) {
+        model.addAttribute("message", ex.getMessage());
+        return "error/400";
     }
 
 }
