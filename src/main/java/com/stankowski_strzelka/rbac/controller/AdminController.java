@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('READ_USERS')")
+    @PreAuthorize("@securityService.hasPrivilege('READ_USERS')")
     public String getAdminView() {
         return "admin";
     }

@@ -17,27 +17,28 @@
         <div class="col-md-6 col-md-offset-3">
             <h1>Login page</h1>
 
-            <form th:action="@{/login}" method="post" th:object="${loginUser}">
-                <div th:if="${param.error}">
-                    <div class="alert alert-danger">
-                        Invalid username or password.
-                    </div>
-                </div>
+            <form th:action="@{/login}" method="post" th:object="${credentials}">
+
+                <p class="error-message"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
+
                 <div th:if="${param.logout}">
                     <div class="alert alert-info">
                         You have been logged out.
                     </div>
                 </div>
                 <div class="form-group"
-                     th:classappend="${#fields.hasErrors('username')}? 'has-error':''">
-                    <label for="username">Username</label>:
+                     th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
+                    <label for="email">Username</label>:
                     <input type="text"
-                           id="username"
-                           name="username"
+                           id="email"
+                           name="email"
                            class="form-control"
-                           th:field="*{username}"
+                           th:field="*{email}"
                            autofocus="autofocus"
-                           placeholder="Username"/>
+                           placeholder="E-mail"/>
                 </div>
                 <div class="form-group"
                      th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
@@ -48,6 +49,14 @@
                            class="form-control"
                            th:field="*{password}"
                            placeholder="Password"/>
+                </div>
+                <div class="form-group">
+                    <label for="role">Log in as</label>
+                    <select id="role" class="form-control" th:field="*{role}">
+                        <option selected="selected" value="ROLE_PATIENT">Patient</option>
+                        <option value="ROLE_MEDICAL">Medical</option>
+                        <option value="ROLE_ADMIN">Administrator</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Log in</button>

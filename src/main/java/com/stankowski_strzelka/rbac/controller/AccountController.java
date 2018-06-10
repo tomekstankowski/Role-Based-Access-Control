@@ -35,7 +35,7 @@ public class AccountController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('READ_USERS') OR principal.username == #model.get('email')")
+    @PreAuthorize("@securityService.hasPrivilege('READ_USERS') OR principal.username == #model.get('email')")
     public String getAccountView(ModelMap model) {
         return "user/account";
     }
@@ -57,7 +57,7 @@ public class AccountController {
         }
     }
 
-    @PreAuthorize("hasAuthority('UPDATE_USERS') OR principal.username == #modelMap.get('email')")
+    @PreAuthorize("@securityService.hasPrivilege('UPDATE_USERS') OR principal.username == #modelMap.get('email')")
     private String updateAccount(@PathVariable long id,
                                  @ModelAttribute("user") @Valid UserUpdateDto user,
                                  BindingResult bindingResult,
@@ -69,7 +69,7 @@ public class AccountController {
         return String.format("redirect:/user/%d/account?success", id);
     }
 
-    @PreAuthorize("hasAuthority('DELETE_USERS') OR principal.username == #model.get('email')")
+    @PreAuthorize("@securityService.hasPrivilege('DELETE_USERS') OR principal.username == #model.get('email')")
     private String deleteAccount(@PathVariable long id, ModelMap model, HttpServletRequest request, Authentication authentication)
             throws ServletException {
         service.deleteUser(id);
