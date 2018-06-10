@@ -7,18 +7,17 @@ import com.stankowski_strzelka.rbac.model.User;
 import com.stankowski_strzelka.rbac.repository.RoleRepository;
 import com.stankowski_strzelka.rbac.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +46,10 @@ public class UserService implements IUserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findById(long id){
+        return userRepository.findById(id);
     }
 
     public User save(UserRegistrationDto registration) {
@@ -80,4 +83,8 @@ public class UserService implements IUserService {
         return privileges.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return findByEmail(authentication.getName());
+    }
 }

@@ -1,15 +1,27 @@
 package com.stankowski_strzelka.rbac.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode
 public class Appointment {
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", medical=" + medical +
+                ", patient=" + patient +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,12 +36,11 @@ public class Appointment {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-
-    public Appointment(User medical, User patient, LocalDateTime startDate, LocalDateTime endDate) {
+    public Appointment(User medical, User patient, LocalDateTime startDate) {
         this.medical = medical;
         this.patient = patient;
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.endDate = startDate.plusMinutes(30);
     }
 
 }

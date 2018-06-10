@@ -11,6 +11,14 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 public class Role {
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", privileges=" + privileges +
+                '}';
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -42,6 +42,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
                 .permitAll();
+        http
+                .portMapper()				//maps the port 8080(http) to 8443(https)
+                .http(8080).mapsTo(8443);
     }
 
     @Bean

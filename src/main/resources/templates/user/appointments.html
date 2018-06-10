@@ -7,59 +7,51 @@
 
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-
     <title>Registration</title>
 </head>
 <body>
-<h1>Umów wizytę</h1>
-<span>Wybierz lekarza</span>
-<select>
-    <option>dr Jan Grzybiarz</option>
-    <option>dr Marek Linda</option>
-    <option>dr Iwona Zyps</option>
-    <option>dr Jacek Gralak</option>
-</select>
-<span>Wybierz datę</span>
-<input type="date"/>
-<span>Wybierz godzinę</span>
-<select>
-    <option>8:15</option>
-    <option>8:30</option>
-    <option>9:00</option>
-    <option>9:45</option>
-    <option>11:00</option>
-    <option>11:30</option>
-</select>
-<button>Umów wizytę</button>
 
-<h1>Moje wizyty</h1>
+<div th:if="${not #lists.isEmpty(appointments)}">
+    <h2>My appointments</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Medical</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        <tr th:each="item : ${appointments}">
+            <td th:text="${item.medical.getFirstName() + ' ' + item.medical.getLastName()}"></td>
+            <td th:text="${item.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_DATE)}"></td>
+            <td th:text="${item.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME) + ' - ' +
+            item.getEndDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME)}"></td>
+        </tr>
+    </table>
+</div>
 <br>
-<table>
-    <tr>
-        <th>Data</th>
-        <th>Godzina</th>
-        <th>Lekarz</th>
-        <th>Gabinet</th>
-    </tr>
-    <tr>
-        <td>17/06/2018</td>
-        <td>8:30</td>
-        <td>dr Marek Linda</td>
-        <td>31</td>
-        <td>
-            <button>Odwołaj</button>
-        </td>
-    </tr>
-    <tr>
-        <td>21/06/2018</td>
-        <td>10:30</td>
-        <td>dr Jacek Gralak</td>
-        <td>32</td>
-        <td>
-            <button>Odwołaj</button>
-        </td>
-    </tr>
-</table>
+<div th:if="${not #lists.isEmpty(availableAppointments)}">
+    <h2>Book an appointment</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Medical</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        <tr th:each="a : ${availableAppointments}">
+            <td th:text="${a.medical.getFirstName() + ' ' + a.medical.getLastName()}"></td>
+            <td th:text="${a.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_DATE)}"></td>
+            <td th:text="${a.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME) + ' - ' +
+            a.getEndDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME)}"></td>
+            <td>
+                <form action="#" th:action="@{/appointment/add}" method="post" th:object="${addAppointment}">
+                    <input type="hidden" th:value="${a.medical.id}" name="medicalId">
+                    <input type="hidden" th:value="${a.startDate}" name="startDate">
+                    <input type="hidden" th:value="${a.endDate}" name="endDate">
+                    <button type="submit" name="action">Book!</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
 </body>
