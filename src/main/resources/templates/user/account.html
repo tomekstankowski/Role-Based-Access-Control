@@ -20,7 +20,7 @@
             </div>
 
             <h1>Profile</h1>
-            <form th:action="@{/profile/{id}/update(id=${user.id})}" th:object="${user}" method="post">
+            <form th:action="@{/user/{id}/account(id=${user.id})}" th:object="${user}" method="post">
 
                 <p class="error-message"
                    th:if="${#fields.hasGlobalErrors()}"
@@ -70,7 +70,10 @@
                        th:text="${error}">Validation error</p>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success">Save changes</button>
+                    <button type="submit" name="action" value="update" class="btn btn-success">Save changes</button>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="action" value="delete" class="btn btn-danger">Delete account</button>
                 </div>
 
             </form>

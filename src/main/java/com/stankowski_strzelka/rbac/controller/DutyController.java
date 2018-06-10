@@ -2,26 +2,31 @@ package com.stankowski_strzelka.rbac.controller;
 
 import com.stankowski_strzelka.rbac.dto.DutyCreationDto;
 import com.stankowski_strzelka.rbac.dto.DutyDto;
+import com.stankowski_strzelka.rbac.exception.BadRequestException;
 import com.stankowski_strzelka.rbac.exception.ConflictException;
+import com.stankowski_strzelka.rbac.exception.ResourceNotFoundException;
 import com.stankowski_strzelka.rbac.model.User;
 import com.stankowski_strzelka.rbac.service.DutyService;
+import com.stankowski_strzelka.rbac.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/user/duties")
+@RequestMapping("/user/{id}/duties")
 @RequiredArgsConstructor
 public class DutyController {
     private final DutyService dutyService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     @ModelAttribute("duty")
@@ -30,8 +35,13 @@ public class DutyController {
     }
 
     @ModelAttribute("duties")
-    public List<DutyDto> dutiesAttribute(HttpSession session) {
-        final User medical = (User) session.getAttribute("user");
+    public List<DutyDto> dutiesAttribute(@PathVariable long id, Model model) {
+        final User medical = userService.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(String.format("User with id %d could not be found", id)));
+        model.addAttribute("email", medical.getEmail());
+        model.addAttribute("medicalId", id);
+        model.addAttribute("medical", medical);
         return dutyService.getDuties(medical)
                 .stream()
                 .map(entity -> modelMapper.map(entity, DutyDto.class))
@@ -39,33 +49,40 @@ public class DutyController {
     }
 
     @GetMapping
-    @PreAuthorize(("hasAuthority('READ_DUTIES')"))
-    public String getDutiesView() {
+    @PreAuthorize(("hasAuthority('READ_DUTIES') AND principal.username == #modelMap.get('email')"))
+    public String getDutiesView(ModelMap modelMap) {
         return "user/duties";
     }
 
     @PostMapping
-    @PreAuthorize(("hasAuthority('CREATE_DUTIES')"))
-    public String createDuty(@Valid @ModelAttribute("duty") DutyCreationDto duty,
+    @PreAuthorize(("hasAuthority('CREATE_DUTIES') AND principal.username == #modelMap.get('email')"))
+    public String createDuty(@PathVariable long id,
+                             @Valid @ModelAttribute("duty") DutyCreationDto duty,
                              BindingResult bindingResult,
-                             HttpSession session) {
+                             ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             return "/user/duties";
         }
-        final User medical = (User) session.getAttribute("user");
+        final User medical = (User) modelMap.get("medical");
         try {
             dutyService.createDuty(duty, medical);
         } catch (ConflictException ex) {
             bindingResult.reject("conflict", ex.getMessage());
             return "/user/duties";
         }
-        return "redirect:/user/duties?added";
+        return String.format("redirect:/user/%d/duties?added", id);
     }
 
-    @PostMapping("/{id}/delete")
-    @PreAuthorize(("hasAuthority('DELETE_DUTIES')"))
-    public String deleteDuty(@PathVariable long id) {
-        dutyService.deleteDuty(id);
-        return "redirect:/user/duties?deleted";
+    @PostMapping("/{dutyId}")
+    @PreAuthorize(("hasAuthority('DELETE_DUTIES') AND principal.username == #modelMap.get('email')"))
+    public String deleteDuty(@PathVariable long id,
+                             @PathVariable long dutyId,
+                             @RequestParam String action,
+                             ModelMap modelMap) {
+        if (action.equals("delete")) {
+            dutyService.deleteDuty(dutyId);
+            return String.format("redirect:/user/%d/duties?deleted", id);
+        }
+        throw new BadRequestException("Unexpected 'action' parameter value");
     }
 }

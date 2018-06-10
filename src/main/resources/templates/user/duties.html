@@ -26,18 +26,18 @@
             <th></th>
         </tr>
         <tr th:each="duty : ${duties}">
-            <form th:action="@{/user/duties/{id}/delete(id=${duty.id})}" method="post">
+            <form th:action="@{/user/{id}/duties/{dutyId}(id=${medicalId}, dutyId=${duty.id})}" method="post">
                 <td th:text="${#temporals.format(duty.startDate, 'dd-MM-yyyy')}"></td>
                 <td th:text="${#temporals.format(duty.startDate, 'HH:mm')}"></td>
                 <td th:text="${#temporals.format(duty.endDate, 'HH:mm')}"></td>
                 <td th:text="${duty.office}"></td>
                 <td>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" name="action" value="delete" class="btn btn-danger">Delete</button>
                 </td>
             </form>
         </tr>
         <tr th:if="${#lists.isEmpty(duties)}">
-            <td colspan="4">Empty</td>
+            <td colspan="5">Empty</td>
         </tr>
     </table>
 
@@ -47,7 +47,7 @@
 
     <h1>Add duty</h1>
 
-    <form th:action="@{/user/duties}" th:object="${duty}" method="post">
+    <form th:action="@{/user/{id}/duties(id=${medicalId})}" th:object="${duty}" method="post">
 
         <p class="error-message"
            th:if="${#fields.hasGlobalErrors()}"

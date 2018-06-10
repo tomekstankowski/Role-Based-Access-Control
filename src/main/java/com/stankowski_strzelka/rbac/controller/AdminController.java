@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,12 +32,5 @@ public class AdminController {
     @PreAuthorize("hasAuthority('READ_USERS')")
     public String getAdminView() {
         return "admin";
-    }
-
-    @PostMapping("/users/{id}/delete")
-    @PreAuthorize("hasAuthority('DELETE_USERS')")
-    public String deleteUser(@PathVariable long id) {
-        service.deleteUser(id);
-        return "redirect:/admin?deleted";
     }
 }
