@@ -35,6 +35,11 @@ public class AppointmentService {
                 .stream().sorted(Comparator.comparing(Appointment::getStartDate))
                 .collect(toList());
     }
+    public List<Appointment> getAllMedicalAppointments(User medical) {
+        return appointmentRepository.findAllByMedical(medical)
+                .stream().sorted(Comparator.comparing(Appointment::getStartDate))
+                .collect(toList());
+    }
 
     //FIXME
     //throw correct exception
@@ -91,6 +96,7 @@ public class AppointmentService {
     private int getNumberOfPossibleAppointments(LocalDateTime start, LocalDateTime end) {
         return (int) (start.until(end, ChronoUnit.MINUTES) / 30);
     }
+
 
 
 }

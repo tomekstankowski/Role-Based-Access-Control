@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -8,44 +8,16 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
 
-    <title>Registration</title>
+    <title>Home page</title>
 </head>
 <body>
-<h1>Pacjenci</h1>
-<span>Wybierz datę</span>
-<input type="date" value="2018-06-12">
-<button>Szukaj</button>
-<br>
-<table>
-    <tr>
-        <th>Godzina</th>
-        <th>Imię i Nazwisko</th>
-        <th>Gabinet</th>
-    </tr>
-    <tr>
-        <td>8:30</td>
-        <td>Jan Kowalski</td>
-        <td>31</td>
-    </tr>
-    <tr>
-        <td>8:45</td>
-        <td>Janusz Brzozowski</td>
-        <td>31</td>
-    </tr>
-    <tr>
-        <td>9:00</td>
-        <td>Jan Kowalski</td>
-        <td>31</td>
-    </tr>
-    <tr>
-        <td>9:15</td>
-        <td>Monika Mikke</td>
-        <td>31</td>
-    </tr>
-</table>
-<span> <a href="/" th:href="@{/user/duties}">Duties</a></span>
-<span> <a href="/" th:href="@{/appointments/list }">Appointments</a></span>
-<span> <a href="/" th:href="@{/logout }">Log out</a></span>
+<h1>Welcome to New Dawn Clinic!</h1>
+<h4 th:if="${session.role.equals('ROLE_ADMIN')}"> <a href="/" th:href="@{/admin }">Admin panel</a></h4>
+<h4 th:if="${session.role.equals('ROLE_MEDICAL')}"> <a href="/" th:href="@{/user/{id}/duties(id=${session.id})}">Duties</a></h4>
+<h4 th:if="${session.role.equals('ROLE_MEDICAL')}"> <a href="/" th:href="@{/appointments/medical/list }">Appointments</a></h4>
+<h4 th:if="${session.role.equals('ROLE_PATIENT')}"> <a href="/" th:href="@{/appointments/list }">Appointments</a></h4>
+<h4> <a href="/" th:href="@{/user/{id}/account(id=${session.id})}">User panel</a></h4>
+<h4> <a href="/" th:href="@{/logout }">Log out</a></h4>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
 

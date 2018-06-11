@@ -11,8 +11,8 @@
 </head>
 <body>
 
-<div th:if="${not #lists.isEmpty(appointments)}">
-    <h2>My medical appointments</h2>
+<div class="container" th:if="${not #lists.isEmpty(appointments)}">
+    <h2>My appointments</h2>
     <div th:if="${param.deleted}">
         <div class="alert alert-info">Appointment has been deleted</div>
     </div>
@@ -21,14 +21,14 @@
     </div>
     <table class="table table-striped">
         <tr>
-            <th>Medical</th>
+            <th>Patient</th>
             <th>Date</th>
             <th>Time</th>
             <th></th>
         </tr>
         <tr th:each="a : ${appointments}">
             <form th:action="@{/appointments/{id}/delete(id=${a.id})}" method="post">
-                <td th:text="${a.medical.getFirstName() + ' ' + a.medical.getLastName()}"></td>
+                <td th:text="${a.patient.getFirstName() + ' ' + a.patient.getLastName()}"></td>
                 <td th:text="${a.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_DATE)}"></td>
                 <td th:text="${a.getStartDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME) + ' - ' +
             a.getEndDate().format(T(java.time.format.DateTimeFormatter).ISO_LOCAL_TIME)}"></td>
@@ -38,10 +38,11 @@
             </form>
         </tr>
     </table>
-
 </div>
 <br>
-
+    <h4> <a href="/" th:href="@{/ }">Home page</a></h4>
+    <h4> <a href="/" th:href="@{/logout }">Log out</a></h4>
+</div>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
 </body>

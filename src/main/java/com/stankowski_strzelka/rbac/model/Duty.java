@@ -27,6 +27,7 @@ public class Duty {
         this.medical = medical;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.office = office;
     }
 
 }

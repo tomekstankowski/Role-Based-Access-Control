@@ -49,9 +49,9 @@ public class AppointmentServiceTest {
         VALID_PATIENT = new User("Tom", "Dikson", "12@gmail.com", "admin",
                 Collections.emptySet());
         VALID_DUTIES_LIST = Arrays.asList(
-                new Duty(VALID_MEDICAL_1, start, start.plusHours(2)),
-                new Duty(VALID_MEDICAL_2, start, start.plusMinutes(90)),
-                new Duty(VALID_MEDICAL_1, start.plusDays(2).plusHours(1), start.plusDays(2).plusHours(2))
+                new Duty(VALID_MEDICAL_1, start, start.plusHours(2), 100),
+                new Duty(VALID_MEDICAL_2, start, start.plusMinutes(90), 100),
+                new Duty(VALID_MEDICAL_1, start.plusDays(2).plusHours(1), start.plusDays(2).plusHours(2), 100)
         );
 
         VALID_APPOINTMENT_LIST_1 = Arrays.asList(
@@ -60,8 +60,8 @@ public class AppointmentServiceTest {
           new Appointment(VALID_MEDICAL_1, VALID_PATIENT, start.plusDays(2).plusMinutes(90))
         );
 
-        VALID_APPOINTMENT_LIST_2 = Arrays.asList(
-          new Appointment(VALID_MEDICAL_2, VALID_PATIENT, start.plusMinutes(30))
+        VALID_APPOINTMENT_LIST_2 = Collections.singletonList(
+                new Appointment(VALID_MEDICAL_2, VALID_PATIENT, start.plusMinutes(30))
         );
 
         VALID_RESPONSE = new ArrayList<>(Arrays.asList(

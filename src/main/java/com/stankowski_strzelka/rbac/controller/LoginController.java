@@ -57,6 +57,7 @@ public class LoginController {
             if (hasRole) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 session.setAttribute("role", credentials.getRole());
+                session.setAttribute("id", user.getId());
                 return "redirect:/";
             } else {
                 bindingResult.reject("no-authority", "You do not have claimed authority");

@@ -21,7 +21,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.*;
 import java.util.*;
 import java.util.function.Supplier;
@@ -117,5 +121,10 @@ public class UserService implements IUserService {
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return findByEmail(authentication.getName());
+    }
+    public String getUserRole(){
+        final ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        final HttpSession session = attr.getRequest().getSession(false);
+        return (String) session.getAttribute("role");
     }
 }
